@@ -1,0 +1,62 @@
+import os
+import time
+from selenium import webdriver
+from selenium.webdriver import safari
+from selenium.webdriver import firefox
+from selenium.webdriver import chrome
+
+
+# Define devices and resolutions
+devices = {
+    "Desktop": [(1920, 1080), (1366, 768), (1536, 864)],
+    "Mobile": [(360, 640), (414, 896), (375, 667)]
+}
+
+# Define pages to capture screenshots
+pages = ["https://www.getcalley.com/", "https://www.getcalley.com/calley-call-from-browser/",
+         "https://www.getcalley.com/calley-pro-features/", "https://www.getcalley.com/best-auto-dialer-app/",
+         "https://www.getcalley.com/how-calley-auto-dialer-app-works/"]
+
+# Browsers and their WebDriver executables
+browsers = {
+    "Chrome": webdriver.Chrome,
+    "Firefox": webdriver.Firefox,
+    "Safari": webdriver.Safari
+}
+
+# Folder to save screenshots
+screenshots_folder = "C:\\Users\\91995\\PycharmProjects\\ecom_project\\Screenshots"
+
+
+# Iterate over browsers
+for browser_name, driver_class in browsers.items():
+    # Initialize WebDriver
+    if browser_name == "Safari":
+        driver = webdriver.Safari
+    else:
+        driver = driver_class()
+    # Iterate over pages
+    for page in pages:
+        # Iterate over devices and resolutions
+        for device, resolutions in devices.items():
+            for resolution in resolutions:
+                width, height = resolution
+                try:
+                    # Set window size
+                    driver.set_window_size(width, height)
+                    # Navigate to page
+                    driver.get(page)
+                    # Capture screenshot
+                    timestamp = time.strftime("%Y%m%d-%H%M%S")
+                    filename = f"{browser_name}_{device}_{width}x{height}_{time.time()}.png"
+                    screenshot_path = os.path.join(screenshots_folder, filename)
+                    driver.save_screenshot(screenshot_path)
+                    print(f"Screenshot captured for {browser_name} on {device} ({width}x{height}): {screenshot_path}")
+                except Exception as e:
+                    print(f"Error capturing screenshot: {e}")
+
+    # Close WebDriver
+driver.quit()
+
+
+
