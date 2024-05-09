@@ -1,10 +1,6 @@
 import os
 import time
 from selenium import webdriver
-from selenium.webdriver import safari
-from selenium.webdriver import firefox
-from selenium.webdriver import chrome
-
 
 # Define devices and resolutions
 devices = {
@@ -17,24 +13,21 @@ pages = ["https://www.getcalley.com/", "https://www.getcalley.com/calley-call-fr
          "https://www.getcalley.com/calley-pro-features/", "https://www.getcalley.com/best-auto-dialer-app/",
          "https://www.getcalley.com/how-calley-auto-dialer-app-works/"]
 
-# Browsers and their WebDriver executables
-browsers = {
-    "Chrome": webdriver.Chrome,
-    "Firefox": webdriver.Firefox,
-    "Safari": webdriver.Safari
-}
+# List of browsers and their names
+browsers = [
+    ("Chrome", webdriver.Chrome),
+    ("Firefox", webdriver.Firefox),
+    ("Safari", webdriver.Safari)
+]
 
 # Folder to save screenshots
 screenshots_folder = "C:\\Users\\91995\\PycharmProjects\\ecom_project\\Screenshots"
 
-
 # Iterate over browsers
-for browser_name, driver_class in browsers.items():
+for browser_name, driver_class in browsers:
     # Initialize WebDriver
-    if browser_name == "Safari":
-        driver = webdriver.Safari
-    else:
-        driver = driver_class()
+    driver = driver_class()
+
     # Iterate over pages
     for page in pages:
         # Iterate over devices and resolutions
@@ -48,7 +41,7 @@ for browser_name, driver_class in browsers.items():
                     driver.get(page)
                     # Capture screenshot
                     timestamp = time.strftime("%Y%m%d-%H%M%S")
-                    filename = f"{browser_name}_{device}_{width}x{height}_{time.time()}.png"
+                    filename = f"{browser_name}_{device}_{width}x{height}_{timestamp}.png"
                     screenshot_path = os.path.join(screenshots_folder, filename)
                     driver.save_screenshot(screenshot_path)
                     print(f"Screenshot captured for {browser_name} on {device} ({width}x{height}): {screenshot_path}")
@@ -56,7 +49,7 @@ for browser_name, driver_class in browsers.items():
                     print(f"Error capturing screenshot: {e}")
 
     # Close WebDriver
-driver.quit()
+    driver.quit()
 
 
 
